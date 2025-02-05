@@ -1,0 +1,56 @@
+
+services:
+  scout:
+    build: .
+    container_name: scout-agent
+    volumes:
+      - ./db:/app/db  # Persist database
+      - ./logs:/var/log/scout  # Changed path to match Dockerfile
+    environment:
+      - TZ=Europe/London  # Set timezone for cron
+    env_file:
+      - .env
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "test", "-f", "/var/log/scout/cron.log"]  # Updated path
+      interval: 1m
+      timeout: 10s
+      retries: 3
+
+
+
+# Scout Agent - Tender Scraping and Notification Service
+#
+# This service scrapes tender information from various sources,
+# filters them using AI, and sends notifications via Telegram.
+#
+# SETUP & RUNNING:
+# 1. Ensure .env file exists with required credentials:
+#    - OPENAI_API_KEY
+#    - ANTHROPIC_API_KEY
+#    - TELEGRAM_BOT_TOKEN
+#
+# 2. Start the service:
+#    $ docker-compose up -d
+#
+# 3. View logs:
+#    - All logs:        $ docker-compose logs -f
+#    - Service logs:    $ docker-compose logs -f scout
+#    - Cron logs:       $ docker exec scout-agent cat /var/log/scout/cron.log
+#
+# 4. Manual trigger:
+#    $ docker-compose exec scout python3 main.py
+#
+# 5. Stop the service:
+#    $ docker-compose down
+#
+# MAINTENANCE:
+# - Database location: ./db/tenders.db
+# - Log files: ./logs/
+# - Cron schedule: Runs every 2 days at midnight UTC
+#
+# TROUBLESHOOTING:
+# - Check container status: $ docker-compose ps
+# - Check container health: $ docker inspect scout-agent
+# - Restart service:       $ docker-compose restart scout
+

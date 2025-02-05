@@ -1,0 +1,8 @@
+langchain>=0.1.0
+langgraph>=0.0.15
+python-telegram-bot>=20.8
+pydantic>=2.0
+python-dotenv>=1.0.0
+langchain-openai>=0.0.5
+langchain-anthropic>=0.1.1
+typing-extensions>=4.9.0 
