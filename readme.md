@@ -90,3 +90,107 @@ Scout has transformed the tender discovery process from a time-consuming manual 
 ---
 
 _Built with ❤️ using CursorAI and LangGraph_
+
+## 🐳 Docker Deployment
+
+### Prerequisites
+
+- Docker and Docker Compose installed on your system
+- API keys for:
+  - OpenAI (GPT-4)
+  - Anthropic (Claude)
+  - Telegram Bot
+
+### Quick Start
+
+1. **Clone the repository**
+
+   ```bash
+   git clone git@github.com:moe1047/scout-the-tender-finder.git
+   cd scout-the-tender-finder
+   ```
+
+2. **Set up environment variables**
+
+   ```bash
+   # Copy the example env file
+   cp .env.example .env
+
+   # Edit .env with your API keys
+   nano .env
+   ```
+
+3. **Build and start the container**
+   ```bash
+   docker-compose up -d
+   ```
+
+### Monitoring & Management
+
+**View Logs**
+
+```bash
+# All logs
+docker-compose logs -f
+
+# Service logs
+docker-compose logs -f scout
+
+# Cron job logs
+docker exec scout-agent cat /var/log/scout/cron.log
+```
+
+**Manual Trigger**
+
+```bash
+# Run the scraper manually
+docker-compose exec scout python3 main.py
+```
+
+**Container Management**
+
+```bash
+# Stop the service
+docker-compose down
+
+# Restart the service
+docker-compose restart scout
+
+# Check container status
+docker-compose ps
+
+# Check container health
+docker inspect scout-agent
+```
+
+### Configuration
+
+- **Schedule**: Cron job runs every 2 days at midnight UTC
+- **Persistence**:
+  - Database: `./db/tenders.db`
+  - Logs: `./logs/`
+- **Timezone**: Set to Europe/London (configurable in docker-compose.yml)
+
+### Troubleshooting
+
+1. **Container won't start**
+
+   - Check if all required environment variables are set in `.env`
+   - Verify Docker daemon is running
+   - Check logs for specific errors
+
+2. **No notifications**
+
+   - Verify Telegram bot token is correct
+   - Check if bot has permission to send messages
+   - Review cron logs for execution status
+
+3. **Database issues**
+
+   - Ensure `./db` directory has proper permissions
+   - Check if volume is properly mounted
+
+4. **Cron not running**
+   - Verify timezone settings
+   - Check cron logs
+   - Ensure cron service is running inside container
