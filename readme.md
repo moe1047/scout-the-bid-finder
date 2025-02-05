@@ -70,10 +70,11 @@ Built in just 3 days using:
 
 ```mermaid
 graph LR
-    A[Scraper] --> B[Database]
-    B --> C[AI Filter]
-    C --> D[Notification]
-    D --> E[Telegram]
+    A[Scraper] --> B[Tender Analyst]
+    B --> C{Analyze more tenders?}
+    C -->|Yes| B
+    C -->|No| D[Telegram Notifier]
+    C --> D[Telegram Notifier]
 ```
 
 1. **Initialization**: System loads configurations and connects to necessary services
