@@ -307,7 +307,9 @@ def create_notification_node(repo: TenderRepository, telegram_tool: TelegramTool
 
 def _send_tender_notifications(tenders: list, repo: TenderRepository, telegram_tool: TelegramTool) -> None:
     """Format and send notifications for each tender."""
-    CHAT_ID = "-1002305750296"  # Consider moving to environment variables
+    chat_id = getenv('TELEGRAM_CHAT_ID')
+    if not chat_id:
+        raise ValueError("TELEGRAM_CHAT_ID environment variable is not set")
     
     for tender in tenders:
         try:
@@ -318,7 +320,7 @@ def _send_tender_notifications(tenders: list, repo: TenderRepository, telegram_t
             print(f"[NOTIFIER] Sending notification for tender: {tender.id}")
             result = telegram_tool.run({
                 "message": formatted_message,
-                "chat_id": CHAT_ID
+                "chat_id": chat_id
             })
             
             if result['success']:
